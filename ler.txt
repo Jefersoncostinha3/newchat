@@ -1,0 +1,35 @@
+Abra seu navegador: Vá para http://localhost:3000.
+Teste o chat e as chamadas:
+Para testar as chamadas, abra pelo menos duas abas ou janelas anônimas do navegador, ou use navegadores diferentes.
+Defina um apelido diferente em cada aba/navegador.
+Você verá a lista de usuários. O nome do outro usuário (seja em outra aba ou navegador) deve aparecer.
+Clique no botão "Ligar" ao lado do outro usuário.
+Permita o acesso ao microfone quando o navegador pedir (essencial para o áudio).
+Na outra aba/navegador, um modal de "Chamada Recebida" deve aparecer. Clique em "Aceitar".
+Agora, você deverá conseguir conversar por áudio entre as duas instâncias!
+Como Fazer o Deploy no Render.com:
+Crie um repositório Git para o seu projeto (ex: no GitHub, GitLab, Bitbucket).
+Adicione seus arquivos ao Git, faça um commit e envie para o repositório remoto:
+Bash
+
+git add .
+git commit -m "Initial commit for IRC Audio Chat"
+git push origin main # ou 'master', dependendo da sua branch principal
+Vá para o Render.com:
+Faça login na sua conta.
+Clique em "New Web Service".
+Conecte seu provedor Git (GitHub, GitLab, Bitbucket).
+Selecione o repositório do seu projeto irc-audio-chat.
+Configure o serviço:
+Name: Dê um nome único (ex: meu-chat-audio-irc).
+Region: Escolha a mais próxima dos seus usuários.
+Branch: main (ou master).
+Root Directory: Deixe em branco (se seu projeto está na raiz do repositório).
+Runtime: Deve detectar Node.js.
+Build Command: npm install
+Start Command: npm start (isso usará o script start do seu package.json).
+Plan Type: Comece com o Free.
+Environment Variables: Você não precisa de variáveis de ambiente para esta versão inicial, mas se precisar no futuro, adicione-as aqui.
+Clique em "Create Web Service".
+O Render vai clonar seu repositório, instalar as dependências e iniciar seu servidor. Você pode acompanhar o progresso nos logs da sua aplicação no dashboard do Render. Uma vez que esteja "Live", você terá uma URL pública (ex: https://meu-chat-audio-irc.onrender.com/) para acessar sua aplicação!
+
