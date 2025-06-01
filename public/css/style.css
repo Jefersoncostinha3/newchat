@@ -1,316 +1,476 @@
+/* Geral */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #2c2f33; /* Cor de fundo Discord/IRC-like */
-    color: #dcddde; /* Texto claro */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
+    padding: 0;
+    /* Removido o background-color original para o vídeo de fundo */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura/altura */
+    color: #333;
+    overflow-x: hidden;
+    /* Adicionado background-image como fallback para o vídeo */
+    /* Se a imagem estiver na mesma pasta do CSS, use apenas o nome do arquivo. */
+    /* Se a imagem estiver em uma pasta 'images' dentro da pasta 'css', use 'images/fallback-image.jpg'. */
+    /* Se a imagem estiver na raiz do projeto (onde está index.html), use '../fallback-image.jpg' */
+    background-image: url('../your-fallback-image.jpg'); /* AJUSTE ESTE CAMINHO CONFORME A LOCALIZAÇÃO DA SUA IMAGEM */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
+/* Overlay escuro para melhorar a legibilidade do texto sobre o vídeo */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Ajuste a opacidade (0.6) conforme a sua preferência */
+    z-index: 0; /* Fica entre o vídeo (-1) e o conteúdo (1) */
+}
+
+/* Estilos para o vídeo de fundo */
+#background-video {
+    position: fixed; /* Fixa o vídeo na viewport */
+    right: 0;
+    bottom: 0;
+    min-width: 100%; /* Garante que o vídeo cubra a largura mínima da tela */
+    min-height: 100%; /* Garante que o vídeo cubra a altura mínima da tela */
+    width: auto; /* Permite que a largura se ajuste automaticamente */
+    height: auto; /* Permite que a altura se ajuste automaticamente */
+    z-index: -1; /* Coloca o vídeo atrás de todo o conteúdo */
+    background-size: cover; /* Garante que o vídeo preencha o espaço sem distorção */
+    overflow: hidden; /* Oculta qualquer parte do vídeo que exceda a tela */
+    object-fit: cover; /* Garante que o vídeo preencha o contêiner sem distorção, cortando as bordas se necessário */
+}
+
+/* Estilos para o container principal do seu aplicativo de chat */
 #app {
-    background-color: #36393f; /* Fundo do app */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.95); /* Fundo branco semi-transparente para o container principal do chat */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 30px;
     width: 90%;
-    max-width: 1000px;
-    height: 80vh;
+    max-width: 1000px; /* Aumentado para acomodar o layout de chat */
+    text-align: center;
+    position: relative; /* Necessário para que o z-index funcione */
+    z-index: 1; /* Coloca o conteúdo principal do chat acima do overlay e do vídeo */
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    gap: 20px;
+    height: 90vh; /* Altura para o layout de chat */
+    overflow: hidden; /* Garante que o conteúdo não vaze */
 }
 
-/* Nickname Screen */
+/* Estilos da tela de apelido */
 #nickname-screen {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
+    justify-content: center;
+    flex-grow: 1; /* Faz com que ocupe o espaço disponível */
 }
 
 #nickname-screen h2 {
-    color: #7289da; /* Azul Discord */
-    margin-bottom: 20px;
+    color: #007bff;
+    margin-bottom: 25px;
+    font-size: 2.2em;
 }
 
 #nickname-input {
-    padding: 10px;
-    border: 1px solid #4f545c;
-    border-radius: 4px;
-    background-color: #40444b;
-    color: #dcddde;
-    margin-bottom: 15px;
-    width: 80%;
+    padding: 12px 20px;
+    border: 1px solid #cceeff;
+    border-radius: 25px;
+    font-size: 1.1em;
+    width: 70%;
     max-width: 300px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+#nickname-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
 #set-nickname-btn {
-    background-color: #7289da;
+    background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 #set-nickname-btn:hover {
-    background-color: #677bc4;
+    background-color: #218838;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
 .error-message {
-    color: #f04747; /* Vermelho */
+    color: #dc3545;
+    font-size: 0.9em;
     margin-top: 10px;
+    min-height: 1.2em;
 }
 
-/* Chat Screen */
+/* Estilos da tela de chat */
 #chat-screen {
     display: flex;
-    height: 100%;
+    height: 100%; /* Ocupa a altura restante do #app */
+    overflow: hidden; /* Para lidar com o layout flex */
 }
 
 #sidebar {
     width: 250px;
-    background-color: #2f3136;
-    padding: 15px;
-    border-right: 1px solid #23272a;
+    background-color: #f0f8ff; /* Azul claro */
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
 }
 
 #sidebar h3 {
-    color: #99aab5;
-    margin-top: 0;
+    color: #007bff;
     margin-bottom: 10px;
-    border-bottom: 1px solid #4f545c;
-    padding-bottom: 5px;
+    font-size: 1.2em;
 }
 
 #room-list, #users-list {
     list-style: none;
     padding: 0;
-    margin-bottom: 20px;
-    flex-grow: 1; /* Permite que a lista de usuários cresça */
-    overflow-y: auto; /* Adiciona scroll se a lista for muito longa */
+    margin: 0;
 }
 
 #room-list li, #users-list li {
-    padding: 8px 5px;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
     cursor: pointer;
-    border-radius: 4px;
     transition: background-color 0.2s ease;
-    display: flex;
-    justify-content: space-between; /* Para alinhar o botão de chamada */
-    align-items: center;
-    word-break: break-word; /* Quebra palavras longas */
 }
 
 #room-list li:hover, #users-list li:hover {
-    background-color: #40444b;
+    background-color: #e6f7ff; /* Azul mais claro ao passar o mouse */
 }
 
 #room-list li.active-room {
-    background-color: #5865f2; /* Azul mais forte para sala ativa */
+    background-color: #007bff;
     color: white;
+    font-weight: bold;
 }
 
-#users-list li span {
-    flex-grow: 1; /* Permite que o nome do usuário ocupe o espaço */
+#room-list li.active-room:hover {
+    background-color: #0056b3;
 }
-
-.call-btn {
-    background-color: #43b581; /* Verde */
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8em;
-    margin-left: 10px;
-    flex-shrink: 0; /* Evita que o botão encolha */
-    transition: background-color 0.2s ease;
-}
-
-.call-btn:hover {
-    background-color: #3ca370;
-}
-
-.call-btn:disabled {
-    background-color: #666;
-    cursor: not-allowed;
-}
-
 
 .room-actions {
     display: flex;
-    margin-bottom: 15px;
+    gap: 5px;
+    margin-top: 10px;
 }
 
-.room-actions input {
+#new-room-input {
     flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #4f545c;
-    border-radius: 4px;
-    background-color: #40444b;
-    color: #dcddde;
-    margin-right: 5px;
+    padding: 8px 12px;
+    border: 1px solid #cceeff;
+    border-radius: 20px;
+    font-size: 0.9em;
 }
 
-.room-actions button {
-    background-color: #7289da;
+#join-new-room-btn {
+    background-color: #6c757d;
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 8px 15px;
+    border-radius: 20px;
     cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+#join-new-room-btn:hover {
+    background-color: #5a6268;
 }
 
 #main-chat {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 15px;
+    padding: 20px;
+    background-color: #ffffff; /* Fundo branco para a área de chat */
 }
 
 #messages {
     flex-grow: 1;
-    background-color: #36393f;
-    border-radius: 4px;
-    padding: 10px;
     overflow-y: auto;
-    margin-bottom: 10px;
-    border: 1px solid #23272a;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+    background-color: #f9fcff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.message {
+#messages p {
     margin-bottom: 8px;
     line-height: 1.4;
-    word-wrap: break-word; /* Garante que mensagens longas quebrem a linha */
+    word-wrap: break-word;
 }
 
-.message strong {
-    color: #7289da; /* Cor do nome do usuário na mensagem */
+/* Estilos de mensagem */
+.message {
+    padding: 8px 12px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-.system-message {
-    font-style: italic;
-    color: #99aab5;
+.message .username {
+    font-weight: bold;
+    margin-right: 5px;
+    font-size: 0.9em;
+}
+
+.message .timestamp {
+    font-size: 0.75em;
+    color: #888;
+    margin-left: 10px;
+}
+
+.message.sent {
+    background-color: #dcf8c6; /* Verde claro para mensagens enviadas */
+    align-self: flex-end; /* Alinha à direita */
+    margin-left: auto; /* Empurra para a direita */
+    text-align: right;
+}
+
+.message.received {
+    background-color: #e0f2f7; /* Azul claro para mensagens recebidas */
+    align-self: flex-start; /* Alinha à esquerda */
+    margin-right: auto; /* Empurra para a esquerda */
+    text-align: left;
+}
+
+.message.system {
+    background-color: #f0f0f0;
     text-align: center;
-    margin: 10px 0;
+    font-style: italic;
+    color: #666;
+    max-width: 100%;
 }
+
 
 #chat-input-area {
     display: flex;
+    gap: 10px;
+    margin-top: auto; /* Empurra para o final do #main-chat */
 }
 
 #message-input {
     flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #4f545c;
-    border-radius: 4px;
-    background-color: #40444b;
-    color: #dcddde;
-    margin-right: 10px;
+    padding: 10px 15px;
+    border: 1px solid #cceeff;
+    border-radius: 20px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+#message-input:focus {
+    outline: none;
+    border-color: #007bff;
 }
 
 #send-message-btn {
-    background-color: #5865f2;
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 4px;
+    border-radius: 20px;
+    font-size: 1em;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #send-message-btn:hover {
-    background-color: #4752c4;
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-/* Call Controls */
+/* Controles de chamada (se aplicável ao seu chat) */
 #call-controls {
-    background-color: #2f3136;
-    padding: 10px;
-    border-top: 1px solid #23272a;
+    margin-top: 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
     gap: 10px;
 }
 
-#call-status {
-    color: #43b581; /* Verde */
-    font-weight: bold;
-    margin: 0;
-}
-
-#end-call-btn, #mute-unmute-btn {
-    background-color: #f04747; /* Vermelho */
-    color: white;
+#call-controls button {
+    background-color: #ffc107;
+    color: #333;
     border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
+    padding: 10px 18px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
 }
 
-#mute-unmute-btn {
-    background-color: #faa61a; /* Amarelo/Laranja */
+#call-controls button:hover {
+    background-color: #e0a800;
 }
 
-#end-call-btn:hover { background-color: #cc3737; }
-#mute-unmute-btn:hover { background-color: #e69516; }
-
-/* Modal for Incoming Call */
+/* Modal de Chamada */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    position: fixed;
+    z-index: 1000; /* Acima de tudo */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px); /* Efeito de blur no fundo */
 }
 
 .modal-content {
-    background-color: #36393f;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    border-radius: 8px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
     text-align: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-content p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .modal-content button {
-    margin: 10px;
-    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
     border: none;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 0 10px;
     cursor: pointer;
     font-size: 1em;
+    transition: background-color 0.3s ease;
 }
 
-#accept-call-btn {
-    background-color: #43b581;
-    color: white;
+.modal-content button:last-child {
+    background-color: #dc3545;
 }
 
-#decline-call-btn {
-    background-color: #f04747;
-    color: white;
+.modal-content button:hover {
+    opacity: 0.9;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #app {
+        flex-direction: column;
+        height: auto; /* Permite que o container se ajuste */
+        min-height: 95vh;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    #nickname-screen h2 {
+        font-size: 1.8em;
+    }
+    #nickname-input {
+        width: 90%;
+    }
+
+    #chat-screen {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 15px;
+        max-height: 200px; /* Limita a altura da sidebar em telas pequenas */
+    }
+
+    #main-chat {
+        padding: 15px;
+        flex-grow: 1; /* Garante que o chat ocupe o restante do espaço */
+    }
+
+    #messages {
+        height: 150px; /* Ajusta altura para telas menores */
+        padding: 10px;
+    }
+
+    #chat-input-area {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #message-input {
+        width: 100%;
+    }
+
+    #send-message-btn {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    #app {
+        padding: 10px;
+        border-radius: 10px;
+    }
+    #nickname-screen h2 {
+        font-size: 1.5em;
+    }
+    #nickname-input {
+        font-size: 1em;
+    }
+    #set-nickname-btn {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    #messages {
+        height: 100px;
+        font-size: 0.9em;
+    }
+    #sidebar h3 {
+        font-size: 1.1em;
+    }
+    #room-list li, #users-list li {
+        font-size: 0.9em;
+    }
+    .message {
+        font-size: 0.9em;
+    }
 }
